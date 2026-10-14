@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Wishing Cards</title>
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+
+body{
+font-family:'Montserrat',sans-serif;
+background: linear-gradient(135deg, #ffd1dc, #ffc0cb, #ffb6c1);
+min-height: 100vh;
+overflow-y: auto;
+color: white;
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+z-index:0;
+pointer-events:none;
+}
+
+h1{
+text-align:center;
+margin:2rem 0;
+position:relative;
+z-index:2;
+}
+
+.cols{
+display:flex;
+flex-wrap:wrap;
+justify-content:center;
+position:relative;
+z-index:2;
+}
+
+.col{
+width:250px;
+margin:1rem;
+cursor:pointer;
+}
+
+.container{
+transform-style:preserve-3d;
+perspective:1000px;
+position:relative;
+}
+
+.front,.back{
+height:250px;
+border-radius:10px;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+transition:0.7s;
+backface-visibility:hidden;
+color:#fff;
+font-weight:bold;
+
+box-shadow:
+0 20px 40px rgba(0,0,0,0.45),
+0 10px 20px rgba(255,105,180,0.3);
+}
+
+.front{
+background-size:cover;
+background-position:center;
+}
+
+.back{
+background:#596a72;
+position:absolute;
+top:0;
+width:100%;
+transform:rotateY(180deg);
+}
+
+.container:hover .front{
+transform:rotateY(-180deg);
+}
+
+.container:hover .back{
+transform:rotateY(0deg);
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="heartCanvas"></canvas>
+
+<h1>Wishing Cards ❤️</h1>
+
+<div class="cols">
+
+<div class="col" data-audio="https://files.catbox.moe/9wpezp.mp3">
+<div class="container">
+<div class="front" style="background-image:url('https://i.postimg.cc/Zq6CnZst/459f07e2-b86b-4001-ba9e-feb1d345ba24.jpg')"></div>
+<div class="back">D – Dreamer 🌟 – A girl who dreams big and believes in her dreams.</div>
+</div>
+</div>
+
+<div class="col" data-audio="https://files.catbox.moe/jdha0h.mp3">
+<div class="container">
+<div class="front" style="background-image:url('https://i.postimg.cc/sxLVK0H5/1ef692b7-df55-4b3b-9653-48c13e550521.jpg')"></div>
+<div class="back">I – Innocent 🦋 – A girl with a pure and kind heart.</div>
+</div>
+</div>
+
+
+
+
+<div class="col" data-audio="https://files.catbox.moe/a0xh9r.mp3">
+<div class="container">
+<div class="front" style="background-image:url('https://i.postimg.cc/c1zZp2TM/8820ea4a-c53c-412f-b82c-746285e09cb9.jpg')"></div>
+<div class="back">V – Valuable 💎 – A girl who is precious and important to everyone.</div>
+</div>
+</div>
+
+<div class="col" data-audio="https://files.catbox.moe/3d416p.mp3">
+<div class="container">
+<div class="front" style="background-image:url('https://i.postimg.cc/nr98VVTj/93d1b4ed-0082-4548-a0b4-8c11ca90f24f.jpg')"></div>
+<div class="back">I – Intelligent 🧠 – A girl who is smart, wise, and thoughtful.</div>
+</div>
+</div>
+
+
+
+
+</div>
+
+
+<!-- ❤️ NEXT PAGE -->
+
+<div style="
+text-align:center;
+margin:40px 0;
+position:relative;
+z-index:2;
+">
+
+<button onclick="goNextPage()" style="
+padding:12px 25px;
+border:none;
+border-radius:25px;
+background:#ff4d6d;
+color:#fff;
+font-size:16px;
+cursor:pointer;
+">
+Next Page ➡️
+</button>
+
+</div>
+
+
+<script>
+
+/* ❤️ Falling Hearts */
+
+const canvas = document.getElementById("heartCanvas");
+const ctx = canvas.getContext("2d");
+
+function resize(){
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+}
+
+resize();
+
+window.addEventListener("resize", resize);
+
+const hearts = [];
+
+function createHeart(){
+
+return {
+
+x: Math.random()*canvas.width,
+y: -20,
+size: Math.random()*12+8,
+speed: Math.random()*2+1,
+drift: Math.random()*1-0.5
+
+};
+
+}
+
+for(let i=0;i<50;i++){
+
+hearts.push(createHeart());
+
+}
+
+function drawHeart(x,y,s){
+
+ctx.beginPath();
+
+ctx.moveTo(x,y);
+
+ctx.bezierCurveTo(
+x,
+y-s/2,
+x-s,
+y-s/2,
+x-s,
+y
+);
+
+ctx.bezierCurveTo(
+x-s,
+y+s/2,
+x,
+y+s,
+x,
+y+s*1.2
+);
+
+ctx.bezierCurveTo(
+x,
+y+s,
+x+s,
+y+s/2,
+x+s,
+y
+);
+
+ctx.bezierCurveTo(
+x+s,
+y-s/2,
+x,
+y-s/2,
+x,
+y
+);
+
+ctx.fillStyle="rgba(255,105,180,0.7)";
+
+ctx.fill();
+
+}
+
+function animate(){
+
+ctx.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+for(let i=0;i<hearts.length;i++){
+
+let h=hearts[i];
+
+drawHeart(
+h.x,
+h.y,
+h.size
+);
+
+h.y+=h.speed;
+h.x+=h.drift;
+
+if(h.y>canvas.height){
+
+hearts[i]=createHeart();
+
+}
+
+}
+
+requestAnimationFrame(animate);
+
+}
+
+animate();
+
+
+/* 🎵 Card Audio */
+
+let currentAudio=null;
+let unlocked=false;
+
+document.body.addEventListener(
+"click",
+()=>{
+unlocked=true;
+},
+{once:true}
+);
+
+document.querySelectorAll(".col").forEach(col=>{
+
+const card=col.querySelector(".container");
+
+/* 👇 CHANGE YOUR AUDIO LINK HERE */
+const audio=new Audio(col.dataset.audio);
+
+card.addEventListener("mouseenter",()=>{
+
+if(!unlocked)return;
+
+if(currentAudio){
+
+currentAudio.pause();
+currentAudio.currentTime=0;
+
+}
+
+currentAudio=audio;
+
+audio.currentTime=0;
+
+audio.play().catch(()=>{});
+
+});
+
+card.addEventListener("mouseleave",()=>{
+
+audio.pause();
+audio.currentTime=0;
+
+});
+
+});
+
+
+/* ❤️ NEXT PAGE
+   👇 CHANGE YOUR GITHUB LINK HERE
+*/
+
+function goNextPage(){
+
+window.location.href =
+"https://ryogaselvam04-byte.github.io/divi1/";
+
+}
+
+</script>
+
+</body>
+</html>
